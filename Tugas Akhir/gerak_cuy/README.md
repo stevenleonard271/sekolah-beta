@@ -1,16 +1,10 @@
 # gerak_cuy
+Sebuah aplikasi untuk mencari teman dalam olahraga
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Fitur Aplikasi
+Setiap orang dapat membuat kegiatan olahraga dan orang lain dapat bergabung.
+Pengguna dapat bergabung ke acara olahraga
+Pengguna dapat melihat peta yang menunjukkan lokasi acara olahrga
+Pengguna dapat mendapat notifikasi olahraga secara rutin
+Pengguna dapat berkenalan dan melakukan interaksi satu sama lain (Chat)
+Pengguna dapat membagikan ke sosial media acara kegiatan
