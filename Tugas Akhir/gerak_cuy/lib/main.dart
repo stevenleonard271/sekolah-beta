@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:gerak_cuy/pages/onboarding_page.dart';
+import 'package:gerak_cuy/pages/sign_in_page.dart';
+import 'package:gerak_cuy/pages/sign_up_page.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +16,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: OnboardingPage());
+    return MaterialApp(
+      home: const OnboardingPage(),
+      routes: {
+        // '/sign-in': (context) => SignInScreen(),
+        '/sign-up': (context) => SignUpPage(),
+        '/sign-in': (context) => SignInPage(),
+      },
+    );
   }
 }

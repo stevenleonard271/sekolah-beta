@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gerak_cuy/pages/login.dart';
+import 'package:gerak_cuy/pages/sign_up_page.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import '../shared/theme.dart';
 
 class OnboardingPage extends StatefulWidget {
-  const OnboardingPage({super.key});
+  const OnboardingPage({Key? key}) : super(key: key);
 
   @override
   State<OnboardingPage> createState() => _OnboardingPageState();
@@ -51,10 +51,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       done: Text('Done',
           style: blueTextStyle.copyWith(fontSize: 15, fontWeight: bold)),
       onDone: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
+        Navigator.pushReplacementNamed(context, '/sign-up');
       },
       showSkipButton: true,
       showBackButton: false,
