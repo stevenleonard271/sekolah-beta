@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class HelloWidget extends StatelessWidget {
+class HelloWidget extends StatefulWidget {
   const HelloWidget({super.key});
 
+  //State merupakan tipe kembalian data
+  @override
+  State<HelloWidget> createState() {
+    return _HelloWidgetState();
+  }
+}
+
+class _HelloWidgetState extends State<HelloWidget> {
+  Color _worldColor = Colors.blue.shade700;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -20,12 +29,44 @@ class HelloWidget extends StatelessWidget {
           ),
           const Text('Hello',
               style: TextStyle(color: Colors.black, fontSize: 40.0)),
-          const Text(
+          Text(
             'World!',
             style: TextStyle(
-                color: Colors.blue,
+                color: _worldColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 60.0),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(primary: Colors.blue.shade700),
+                  onPressed: () {
+                    setState(() {
+                      _worldColor = Colors.blue.shade700;
+                    });
+                  },
+                  child: null),
+              //Tombol warna hijau
+              ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(primary: Colors.green.shade700),
+                  onPressed: () {
+                    setState(() {
+                      _worldColor = Colors.green.shade700;
+                    });
+                  },
+                  child: null),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.red.shade700),
+                  onPressed: () {
+                    setState(() {
+                      _worldColor = Colors.red.shade700;
+                    });
+                  },
+                  child: null),
+            ],
           )
         ],
       ),
