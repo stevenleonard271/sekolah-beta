@@ -1,31 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:latihan_navigation/page_two.dart';
 
-class PageOne extends StatelessWidget {
+import 'page_two.dart';
+
+class PageOne extends StatefulWidget {
   const PageOne({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    int number = 0;
+  State<PageOne> createState() => _PageOneState();
+}
 
+class _PageOneState extends State<PageOne> {
+  int screenView = 0;
+  String page = "";
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Latihan Page 1'),
-        centerTitle: true,
+        title: const Text('Latihan page 1'),
       ),
       body: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text('Saya dipanggil sebanyak $number'),
-          const SizedBox(height: 10),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PageTwo(number: number)));
-              },
-              child: const Text('Navigation to Page 2'))
-        ]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Saya dipanggil sebanyak $screenView'),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  final data = await Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const PageTwo()));
+                  setState(() {
+                    screenView++;
+                    if (data != null) {
+                      page = data;
+                    } else {
+                      page = "";
+                    }
+                  });
+                },
+                child: const Text('Navigation to Page 2')),
+            const SizedBox(height: 20),
+            Visibility(
+              child: Text('Saya kembali dari $page'),
+              visible: page.isNotEmpty,
+            )
+          ],
+        ),
       ),
     );
   }

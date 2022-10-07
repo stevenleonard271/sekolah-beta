@@ -1,32 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:latihan_navigation/page_one.dart';
+import 'package:latihan_navigation/page_three.dart';
 
-class PageTwo extends StatelessWidget {
-  PageTwo({super.key, required this.number});
-
-  int number;
+class PageTwo extends StatefulWidget {
+  const PageTwo({super.key});
 
   @override
+  State<PageTwo> createState() => _PageTwoState();
+}
+
+class _PageTwoState extends State<PageTwo> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Latihan Page 2'),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const PageThird()));
-              },
-              child: const Text('Navigation to Page 3')),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.popUntil(context, (route) => true);
-              },
-              child: const Text('Back to Page 1')),
-        ]),
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, "dari halaman 2");
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Latihan Page 2'),
+        ),
+        body: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const PageThree()));
+                },
+                child: const Text('Navigation to Page 3')),
+            const SizedBox(height: 20),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, 'dari halaman 2');
+                },
+                child: const Text('Back to Page 1'))
+          ],
+        )),
       ),
     );
   }
