@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shopping_cart/ui/product-detail/index.dart';
 import 'package:shopping_cart/ui/shopping_cart/index.dart';
+import '../../models/cart.dart';
 import '../../models/product.dart';
 
 class CatalogPage extends StatelessWidget {
@@ -98,7 +100,11 @@ class CatalogProductCard extends StatelessWidget {
                       ConstrainedBox(
                         constraints: const BoxConstraints(minWidth: 200),
                         child: TextButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              Provider.of<Cart>(context, listen: false)
+                                  .addToCart(product);
+                              Navigator.pushNamed(context, '/shopping_cart');
+                            },
                             style: TextButton.styleFrom(
                                 primary: Colors.white,
                                 backgroundColor: Colors.tealAccent.shade700),

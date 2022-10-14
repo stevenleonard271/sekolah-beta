@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../models/cart.dart';
 import '../../models/product.dart';
 
 class ShoppingCartPage extends StatelessWidget {
@@ -19,114 +21,132 @@ class ShoppingCartPage extends StatelessWidget {
       Product(
           id: '10', name: 'Item10', price: 10000, image: 'assets/shoe1.png'),
     ];
-    // final List<String> items = [
-    //   'Item 1',
-    //   'Item 2',
-    //   'Item 3',
-    //   'Item 4',
-    //   'Item 5',
-    //   'Item 6',
-    //   'Item 7',
-    //   'Item 8',
-    //   'Item 9',
-    //   'Item 10'
-    // ];
-    // final List<int> prices = [
-    //   10000,
-    //   20000,
-    //   30000,
-    //   40000,
-    //   50000,
-    //   60000,
-    //   70000,
-    //   80000,
-    //   90000,
-    //   100000,
-    // ];
-    // final List<String> pictures = [
-    //   'assets/shoe1.png',
-    //   'assets/shoe2.png',
-    //   'assets/shoe3.png',
-    //   'assets/shoe1.png',
-    //   'assets/shoe2.png',
-    //   'assets/shoe3.png',
-    //   'assets/shoe1.png',
-    //   'assets/shoe2.png',
-    //   'assets/shoe3.png',
-    //   'assets/shoe1.png',
-    // ];
     return Scaffold(
-        appBar: AppBar(
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back),
-              tooltip: 'Back',
-            ),
-            title: const Text('Shopping Cart')),
-        body: ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Card(
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: Text(items[index].name),
-                      leading: Image.asset(
-                        items[index].image,
-                        height: 56,
-                        width: 56,
-                        fit: BoxFit.cover,
+      appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back),
+            tooltip: 'Back',
+          ),
+          title: const Text('Shopping Cart')),
+      body: Consumer<Cart>(
+        builder: (BuildContext context, Cart cart, Widget? child) {
+          return ListView.builder(
+              padding: const EdgeInsets.all(10),
+              itemCount: cart.items.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        title: Text(
+                          cart.items[index].product.name,
+                        ),
+                        leading: Image.asset(
+                          cart.items[index].product.image,
+                          height: 56,
+                          width: 56,
+                          fit: BoxFit.cover,
+                        ),
+                        subtitle: Text(
+                          'Rp${cart.items[index].product.price}',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                      subtitle: Text(
-                        'Rp${items[index].price}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {},
-                      ),
-                    ),
-                    const ShoppingCartItemQty()
-                  ],
-                ),
-              );
-            }));
+                      ShoppingCartItemQty(index: index)
+                    ],
+                  ),
+                );
+              });
+        },
+      ),
+      bottomNavigationBar: const ShoppingCartTotal(),
+    );
   }
 }
 
-class ShoppingCartItemQty extends StatefulWidget {
-  const ShoppingCartItemQty({super.key});
+class ShoppingCartItemQty extends StatelessWidget {
+  const ShoppingCartItemQty({Key? key, required this.index}) : super(key: key);
 
-  @override
-  State<ShoppingCartItemQty> createState() => _ShoppingCartItemQtyState();
-}
+  final int index;
 
-class _ShoppingCartItemQtyState extends State<ShoppingCartItemQty> {
-  int _qty = 1;
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.delete)),
         IconButton(
             onPressed: () {
-              setState(() {
-                if (_qty > 1) _qty--;
-              });
+              Provider.of<Cart>(context, listen: false).removeFromCart(index);
+            },
+            icon: const Icon(Icons.delete)),
+        IconButton(
+            onPressed: () {
+              // setState(() {
+              //   if (_qty > 1) _qty--;
+              // });
+              Provider.of<Cart>(context, listen: false).decItemQty(index);
             },
             icon: const Icon(Icons.remove)),
-        Text('$_qty'),
+        Selector<Cart, int>(
+          selector: (BuildContext context, Cart cart) {
+            return cart.items[index].qty;
+          },
+          builder: (BuildContext context, int qty, Widget? child) {
+            return Text('$qty');
+          },
+        ),
         IconButton(
             onPressed: () {
-              setState(() {
-                _qty++;
-              });
+              // setState(() {
+              //   _qty++;
+              // });
+              Provider.of<Cart>(context, listen: false).incItemQty(index);
             },
-            icon: const Icon(Icons.add))
+            icon: const Icon(Icons.add)),
       ],
+    );
+  }
+}
+
+class ShoppingCartTotal extends StatelessWidget {
+  const ShoppingCartTotal({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.tealAccent.shade400))),
+      child: Consumer<Cart>(
+        builder: (BuildContext context, Cart cart, Widget? child) {
+          return ListTile(
+            title: const Text(
+              'Total Price',
+              style: TextStyle(fontSize: 12, color: Colors.black),
+            ),
+            subtitle: Text(
+              'Rp${cart.totalPrice}',
+              style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            trailing: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 150),
+              child: TextButton(
+                  onPressed: cart.items.isNotEmpty ? () {} : null,
+                  child: const Text('Checkout'),
+                  style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: cart.items.isNotEmpty
+                          ? Colors.tealAccent.shade700
+                          : Colors.grey.shade400)),
+            ),
+          );
+        },
+      ),
     );
   }
 }
