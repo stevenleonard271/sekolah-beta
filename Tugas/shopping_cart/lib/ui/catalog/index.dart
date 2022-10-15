@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopping_cart/main.dart';
 import 'package:shopping_cart/ui/product-detail/index.dart';
 import 'package:shopping_cart/ui/shopping_cart/index.dart';
 import '../../models/cart.dart';
@@ -48,12 +49,35 @@ class CatalogPage extends StatelessWidget {
           )
         ],
       ),
-      body: ListView.builder(
-        itemCount: products.length,
-        padding: const EdgeInsets.all(10),
-        itemBuilder: (context, index) =>
-            CatalogProductCard(product: products[index]),
-      ),
+      body: FutureBuilder(
+          future: getProductsFromFirebase(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  'An Error has occured:\n${snapshot.error}',
+                  textAlign: TextAlign.center,
+                ),
+              );
+            }
+            if (snapshot.hasData) {
+              List<Product> products = snapshot.data!;
+              return ListView.builder(
+                itemCount: products.length,
+                itemBuilder: (context, index) =>
+                    CatalogProductCard(product: products[index]),
+              );
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
+      // body: ListView.builder(
+      //   itemCount: products.length,
+      //   padding: const EdgeInsets.all(10),
+      //   itemBuilder: (context, index) =>
+      //       CatalogProductCard(product: products[index]),
+      // ),
     );
   }
 }
@@ -73,7 +97,7 @@ class CatalogProductCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Image.asset(
+            Image.network(
               product.image,
               fit: BoxFit.cover,
             ),

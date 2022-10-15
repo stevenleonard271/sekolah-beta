@@ -44,7 +44,7 @@ class ShoppingCartPage extends StatelessWidget {
                         title: Text(
                           cart.items[index].product.name,
                         ),
-                        leading: Image.asset(
+                        leading: Image.network(
                           cart.items[index].product.image,
                           height: 56,
                           width: 56,
@@ -136,7 +136,11 @@ class ShoppingCartTotal extends StatelessWidget {
             trailing: ConstrainedBox(
               constraints: const BoxConstraints(minWidth: 150),
               child: TextButton(
-                  onPressed: cart.items.isNotEmpty ? () {} : null,
+                  onPressed: cart.items.isNotEmpty
+                      ? () {
+                          Navigator.pushNamed(context, '/checkout');
+                        }
+                      : null,
                   child: const Text('Checkout'),
                   style: TextButton.styleFrom(
                       primary: Colors.white,
