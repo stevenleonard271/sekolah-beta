@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../shared/theme.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  const CustomTextFormField(
+  CustomTextFormField(
       {Key? key,
       required this.hintText,
       required this.title,
       required this.margin,
+      this.prefix,
+      this.allowInput,
+      this.textInputType,
       this.obscureText = false,
       required this.controller})
       : super(key: key);
 
   final String title;
+  final TextInputType? textInputType;
   final String hintText;
   final bool obscureText;
   final EdgeInsets margin;
+  final Icon? prefix;
   final TextEditingController controller;
+  List<TextInputFormatter>? allowInput;
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +39,15 @@ class CustomTextFormField extends StatelessWidget {
             height: 6,
           ),
           TextFormField(
+            inputFormatters: allowInput,
             style: blackTextStyle.copyWith(fontSize: 13),
+            keyboardType: textInputType,
             controller: controller,
             cursorColor: Colors.black,
             obscureText: obscureText,
             decoration: InputDecoration(
               filled: true,
+              prefixIcon: prefix,
               fillColor: Colors.white,
               hintText: hintText,
               hintStyle: blackTextStyle.copyWith(

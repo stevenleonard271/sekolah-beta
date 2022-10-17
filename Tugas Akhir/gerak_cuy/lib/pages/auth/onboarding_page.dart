@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gerak_cuy/pages/sign_up_page.dart';
+import 'sign_up_page.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import '../shared/theme.dart';
+import '../../shared/theme.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({Key? key}) : super(key: key);
@@ -42,9 +42,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
         ),
         PageViewModel(
           decoration: pageDecoration,
-          title: "Ikut atau buat kegiatan olahraga yang beragam",
+          title: "Kegiatan olahraga yang beragam",
           body:
-              "Kamu bisa ikut atau adain berbagai kegiatan olahraga lainnya seperti jogging, futsal, basket, bulu tangkis, renang, dll.",
+              "Kamu bisa ikut atau adain berbagai kegiatan olahraga seperti jogging, futsal, basket, bulu tangkis, renang, dan lain lain.",
           image: Image.asset('assets/goal.png', width: imageWidth, height: 200),
         ),
       ],

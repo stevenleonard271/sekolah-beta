@@ -6,8 +6,12 @@ const primaryColor = Color(0xff00ADB5);
 
 double defaultRadius = 17;
 TextStyle blackTextStyle = GoogleFonts.poppins(color: Colors.black);
+TextStyle whiteTextStyle = GoogleFonts.poppins(color: Colors.white);
 TextStyle greyTextStyle = GoogleFonts.poppins(color: Colors.grey);
-TextStyle blueTextStyle = GoogleFonts.poppins(color: Colors.blue);
+TextStyle amberTextStyle = GoogleFonts.poppins(color: Colors.amber);
+TextStyle greenTextStyle = GoogleFonts.poppins(color: Colors.green);
+TextStyle blueTextStyle = GoogleFonts.poppins(color: Colors.blueAccent);
+TextStyle redTextStyle = GoogleFonts.poppins(color: Colors.red);
 
 FontWeight light = FontWeight.w300;
 FontWeight regular = FontWeight.w400;
