@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gerak_cuy/models/user_model.dart';
 import 'package:gerak_cuy/widgets/custom_button.dart';
 import 'package:gerak_cuy/widgets/custom_text_form_field.dart';
 import '../../shared/theme.dart';
@@ -11,6 +14,7 @@ class SignUpPage extends StatelessWidget {
   final TextEditingController passwordController =
       TextEditingController(text: '');
 
+  final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,7 +26,6 @@ class SignUpPage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  // const SizedBox(height: 10),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text('Daftar',
@@ -54,7 +57,22 @@ class SignUpPage extends StatelessWidget {
                       margin: const EdgeInsets.only(bottom: 20),
                       controller: passwordController),
                   const SizedBox(height: 5),
-                  CustomButton(title: 'Daftar', onPressed: () {}),
+                  CustomButton(
+                      title: 'Daftar',
+                      onPressed: () async {
+                        try {
+                          await _auth
+                              .createUserWithEmailAndPassword(
+                                  email: emailController.text,
+                                  password: passwordController.text)
+                              .then((value) {
+                            postDetailtoFireStore();
+                            Navigator.pushNamed(context, '/sign-in');
+                          });
+                        } on FirebaseAuthException catch (e) {
+                          showNotification(context, e.message.toString());
+                        }
+                      }),
                   const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -82,4 +100,25 @@ class SignUpPage extends StatelessWidget {
       ),
     );
   }
+
+  postDetailtoFireStore() async {
+    User? user = _auth.currentUser;
+    UserModel userModel = UserModel();
+
+    userModel.email = user!.email;
+    userModel.uid = user.uid;
+    userModel.fullName = nameController.text;
+    userModel.foto =
+        "https://firebasestorage.googleapis.com/v0/b/gerakcuy-93803.appspot.com/o/170-1708409_headshot-placeholder-silhouette-gender-neutral.png?alt=media&token=9bb4cb71-6095-4c67-99be-56166703955f";
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .set(userModel.toMap());
+  }
+}
+
+void showNotification(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      backgroundColor: primaryColor, content: Text(message.toString())));
 }

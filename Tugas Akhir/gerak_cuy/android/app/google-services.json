@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "505341361474",
+    "project_id": "gerakcuy-93803",
+    "storage_bucket": "gerakcuy-93803.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505341361474:android:118fb8c4af6e9b6b82dcdb",
+        "android_client_info": {
+          "package_name": "com.example.gerakCuy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "505341361474-0pqgounnhot9s4k73fi3cv5htk24v1if.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpIlBSlrZEGFCteQa0vTVAReE6zr-FWwc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "505341361474-0pqgounnhot9s4k73fi3cv5htk24v1if.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

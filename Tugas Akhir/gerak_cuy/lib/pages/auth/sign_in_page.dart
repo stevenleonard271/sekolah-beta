@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gerak_cuy/shared/theme.dart';
 
@@ -10,11 +11,13 @@ class SignInPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController(text: '');
   final TextEditingController passwordController =
       TextEditingController(text: '');
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: backgroundColor,
         body: SafeArea(
           child: Padding(
@@ -49,8 +52,17 @@ class SignInPage extends StatelessWidget {
                   const SizedBox(height: 5),
                   CustomButton(
                       title: 'Masuk',
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/controller');
+                      onPressed: () async {
+                        try {
+                          await FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                  email: emailController.text,
+                                  password: passwordController.text);
+                          Navigator.pushReplacementNamed(
+                              context, '/controller');
+                        } on FirebaseAuthException catch (e) {
+                          showNotification(context, e.message.toString());
+                        }
                       }),
                   const SizedBox(height: 15),
                   Row(
@@ -78,5 +90,10 @@ class SignInPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void showNotification(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: primaryColor, content: Text(message.toString())));
   }
 }

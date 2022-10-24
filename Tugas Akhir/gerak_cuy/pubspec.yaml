@@ -30,13 +30,17 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   carousel_slider: ^4.1.1
+  cloud_firestore: ^4.0.1
   convex_bottom_bar: ^3.1.0+1
   cupertino_icons: ^1.0.2
+  firebase_auth: ^4.0.1
+  firebase_core: ^2.0.0
   flutter:
     sdk: flutter
   flutter_native_splash: ^2.2.9
   google_fonts: ^3.0.1
   icon: ^2.2.1
+  intl: ^0.17.0
   introduction_screen: ^3.0.2
   shared_preferences: ^2.0.15
   smooth_page_indicator: ^1.0.0+2

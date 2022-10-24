@@ -1,13 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gerak_cuy/shared/theme.dart';
 import 'package:gerak_cuy/widgets/custom_button.dart';
 import 'package:gerak_cuy/widgets/custom_button_icon.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+import '../../models/user_model.dart';
+import '../auth/sign_in_page.dart';
 
+class ProfilePage extends StatelessWidget {
+  ProfilePage({super.key});
+  UserModel userModel = UserModel();
+
+  User? loggedUser = FirebaseAuth.instance.currentUser;
+  final auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
+    void signOut() async {
+      try {
+        await auth.signOut();
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/sign-in', (route) => false);
+      } catch (e) {
+        print(e);
+      }
+    }
+
     return Scaffold(
       backgroundColor: backgroundColor,
       body: Center(
@@ -21,33 +39,78 @@ class ProfilePage extends StatelessWidget {
                     fontSize: 25, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
-              const CircleAvatar(maxRadius: 50),
-              const SizedBox(height: 10),
-              Text(
-                'Pengguna',
-                style: blackTextStyle.copyWith(
-                    fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.phone_android,
-                    color: Colors.green,
-                    size: 25,
-                  ),
-                  const SizedBox(
-                    width: 3,
-                  ),
-                  Text(
-                    '0895395177691',
-                    style: blackTextStyle.copyWith(
-                        fontSize: 18, fontWeight: FontWeight.normal),
-                  ),
-                ],
-              ),
+              FutureBuilder(
+                  future: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(loggedUser!.uid)
+                      .get()
+                      .then((value) {
+                    return userModel = UserModel.fromMap(value.data());
+                  }),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        children: [
+                          CircleAvatar(
+                              maxRadius: 50,
+                              backgroundImage: NetworkImage(userModel.foto!)),
+                          const SizedBox(height: 10),
+                          Text(
+                            userModel.fullName!,
+                            style: blackTextStyle.copyWith(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.phone_android,
+                                color: Colors.green,
+                                size: 25,
+                              ),
+                              const SizedBox(
+                                width: 3,
+                              ),
+                              Text(
+                                userModel.nomor == null
+                                    ? 'Belum ada nomor'
+                                    : userModel.nomor!,
+                                style: blackTextStyle.copyWith(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          'Kesalahan terjadi\n${snapshot.error}',
+                          textAlign: TextAlign.center,
+                          style: redTextStyle,
+                        ),
+                      );
+                    }
+                    return const Center(child: CircularProgressIndicator());
+                  }),
               const SizedBox(height: 20),
+              CustomButtonwithIcon(
+                title: 'Lihat Profil',
+                icon: const Icon(
+                  Icons.remove_red_eye,
+                  color: Colors.green,
+                ),
+                titleStyle: greenTextStyle.copyWith(
+                    fontSize: 15, fontWeight: FontWeight.bold),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/view_profile',
+                      arguments: loggedUser);
+                },
+                margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              ),
               CustomButtonwithIcon(
                 title: 'Edit Profil',
                 icon: const Icon(
@@ -57,7 +120,8 @@ class ProfilePage extends StatelessWidget {
                 titleStyle: amberTextStyle.copyWith(
                     fontSize: 15, fontWeight: FontWeight.bold),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/edit_profile');
+                  Navigator.pushNamed(context, '/edit_profile',
+                      arguments: loggedUser);
                 },
                 margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               ),
@@ -80,7 +144,9 @@ class ProfilePage extends StatelessWidget {
                 ),
                 titleStyle: redTextStyle.copyWith(
                     fontSize: 15, fontWeight: FontWeight.bold),
-                onPressed: () {},
+                onPressed: () {
+                  signOut();
+                },
                 margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               ),
               const SizedBox(height: 30),
@@ -118,3 +184,25 @@ class ProfilePage extends StatelessWidget {
     );
   }
 }
+
+// void signOut() async {
+//   try {
+//     await _auth.signOut();
+//     var snackBar = const SnackBar(
+//       content: Text('Berhasil Keluar'),
+//       duration: Duration(milliseconds: 700),
+//       backgroundColor: Colors.green,
+//     );
+//     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//     Navigator.pushAndRemoveUntil(
+//         context,
+//         MaterialPageRoute(builder: (context) => const Login()),
+//         (route) => false);
+//   } catch (e) {
+//     var errorSnackBar = const SnackBar(
+//       content: Text('Tidak Keluar'),
+//       backgroundColor: Colors.red,
+//     );
+//     ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+//   }
+// }
